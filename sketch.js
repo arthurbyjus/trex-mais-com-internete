@@ -4,11 +4,18 @@ var solo,imagem;
 var inv;
 var nuvem;
 var nuvemm;
+var obs1,obs2,obs3,obs4,obs5,obs6;
 function preload(){
 //Carrega as imagens para a animação do T-rex
 trexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
 imagem=loadImage("ground2.png"); 
 nuvemm=loadImage("cloud.png");
+obs1=loadImage("obstacle1.png");
+obs2=loadImage("obstacle2.png");
+obs3=loadImage("obstacle3.png");
+obs4=loadImage("obstacle4.png");
+obs5=loadImage("obstacle5.png");
+obs6=loadImage("obstacle6.png");
 }
 
 function setup(){
@@ -47,6 +54,7 @@ trex.velocityY = trex.velocityY + 1;
 trex.collide(inv);
 //chamar uma função que desenha as nuvens
 gerarNuvens();
+gerarobs();
 //Desenha todos os sprites
 drawSprites();
 }
@@ -59,6 +67,28 @@ if(frameCount%119   ===0){
     nuvem.velocityX=-3;  
     nuvem.depth=trex.depth;
     trex.depth=trex.depth+1
+    nuvem.lifetime=499; 
 }
  
+}
+function gerarobs(){
+    if(frameCount%119   ===0){
+       var  obs =createSprite(1200,365,10,40) ;
+        obs      .velocityX=-3;
+var numero= Math.round(random(1,6));
+switch (numero) {
+    case 1:obs.addImage(obs1); 
+        break;
+        case 2:obs.addImage(obs2); 
+      
+        break;
+        case 3:obs.addImage(obs3); 
+        break;case 4:obs.addImage(obs4); 
+        break;case 5:obs.addImage(obs5); 
+        break;case 6:obs.addImage(obs6sss); 
+        break;
+    default:
+        break;
+}
+        } 
 }
