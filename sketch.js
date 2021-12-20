@@ -11,6 +11,11 @@ var grupodeobs;
 var jogando = 1;
 var morreu = 0;
 var estado = jogando;
+var f;
+var gameover;
+var gameoverfoto;
+var resetar;
+var resetarimagem;
 function preload(){
 //Carrega as imagens para a animação do T-rex
 trexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
@@ -22,6 +27,9 @@ obs3=loadImage("obstacle3.png");
 obs4=loadImage("obstacle4.png");
 obs5=loadImage("obstacle5.png");
 obs6=loadImage("obstacle6.png");
+f=loadAnimation("trex_collided.png");
+gameoverfoto=loadImage("gameOver.png");
+resetarimagem=loadImage("restart.png");
 }
 
 function setup(){
@@ -33,6 +41,7 @@ solo.x=solo.width/2;
 //cria o sprite do T-rex e adiciona a animação
 trex = createSprite(50,160,20,50);
 trex.addAnimation("correndo",trexCorrendo);
+trex.addAnimation("f",f);
 //cria as bordas
 borda = createEdgeSprites();
 
@@ -45,6 +54,13 @@ pontos = 0;
 
 grupodenuvens = new Group();
 grupodeobs = new Group();
+
+trex.debug = false;
+trex.setCollider("circle", 0, 0, 40);
+gameover=createSprite(300,100);
+gameover.addImage(gameoverfoto);
+resetar=createSprite(300,140);
+resetar.addImage(resetarimagem);
 }
 function draw(){
 //console.log(trex.y); 
@@ -52,14 +68,14 @@ function draw(){
 background("black");
 text("Pontuação:"+pontos, 500,50);
 if(estado === jogando){
-    solo.velocityX=-2;
+    solo.velocityX=-4;
     pontos = pontos + Math.round(frameCount/60);
     if(solo.x<0){
         solo.x=solo.width/2;
         }
     //Faz o trex pular quando aperta a tecla espaço
 if(keyDown("space")&&trex.y>=300){
-    trex.velocityY = -13;
+    trex.velocityY = -15;
     }  
       //Sistema degravidade
 trex.velocityY = trex.velocityY + 1;
@@ -71,8 +87,12 @@ if(grupodeobs.isTouching(trex)){
 }
 } else if(estado === morreu){
     solo.velocityX = 0;
+    trex.velocityY=0;
+    trex.changeAnimation("f",f);
     grupodenuvens.setVelocityXEach(0);
     grupodeobs.setVelocityXEach(0);
+    grupodenuvens.setLifetimeEach(-1);
+    grupodeobs.setLifetimeEach(-1);
 }
 //Impede que o T-rex caia da tela
 trex.collide(inv);
@@ -85,7 +105,7 @@ if(frameCount%119   ===0){
     nuvem=createSprite(1200,100,40,10) ;
     nuvem.addImage(nuvemm);
     nuvem.y=Math.round(random(10,200));
-    nuvem.velocityX=-3;  
+    nuvem.velocityX=-6;  
     nuvem.depth=trex.depth;
     trex.depth=trex.depth+1
     nuvem.lifetime=499; 
@@ -96,7 +116,7 @@ if(frameCount%119   ===0){
 function gerarobs(){
     if(frameCount%119   ===0){
        var  obs =createSprite(1200,365,10,40) ;
-        obs      .velocityX=-3;
+        obs      .velocityX=-6;
 var numero= Math.round(random(1,6));
 switch (numero) {
     case 1:obs.addImage(obs1); 
