@@ -17,6 +17,8 @@ var gameoverfoto;
 var resetar;
 var resetarimagem;
 var pulo,morte,point;
+var mensagem = "Isso é uma mensagem";
+
 function preload(){
 //Carrega as imagens para a animação do T-rex
 trexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
@@ -61,19 +63,23 @@ grupodeobs = new Group();
 
 trex.debug = false;
 trex.setCollider("circle", 0, 0, 40);
-gameover=createSprite(300,100);
+gameover=createSprite(600,100);
 gameover.addImage(gameoverfoto);
-resetar=createSprite(300,140);
+resetar=createSprite(600,180);
 resetar.addImage(resetarimagem);
+
 }
 function draw(){
+//console.log(mensagem);
 //console.log(trex.y); 
 //pinta o fundo da tela do jogo de branco
 background("black");
 text("Pontuação:"+pontos, 500,50);
 if(estado === jogando){
+    gameover.visible=false;
+resetar.visible=false;
     solo.velocityX=-(4+pontos/100);
-    pontos = pontos + Math.round(frameCount/60);
+    pontos = pontos + Math.round(frameRate()/60);
     if(pontos%100   ===0&& pontos>0){
     point.play();
     }
@@ -95,6 +101,8 @@ if(grupodeobs.isTouching(trex)){
     morte.play();
 }
 } else if(estado === morreu){
+    gameover.visible=true;
+    resetar.visible=true; 
     solo.velocityX = 0;
     trex.velocityY=0;
     trex.changeAnimation("f",f);
@@ -102,11 +110,25 @@ if(grupodeobs.isTouching(trex)){
     grupodeobs.setVelocityXEach(0);
     grupodenuvens.setLifetimeEach(-1);
     grupodeobs.setLifetimeEach(-1);
+    if(mousePressedOver(resetar)){
+        //console.log("REINICIE O JOGO!");
+        reset();
+    }
 }
 //Impede que o T-rex caia da tela
 trex.collide(inv);
 //Desenha todos os sprites
 drawSprites();
+}
+
+function reset(){
+estado=jogando;
+gameover.visible=false;
+resetar.visible=false;
+grupodenuvens.destroyEach();
+grupodeobs.destroyEach();
+trex.changeAnimation("correndo",trexCorrendo);
+pontos=0;
 }
 
 function gerarNuvens(){
